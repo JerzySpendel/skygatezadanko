@@ -7,16 +7,6 @@ app = models.app
 app.secret_key = 'spijdfP)*SDUf-ssJSOPS(S(DF(*#jpdf8SDfhf'
 
 
-def exception_handler(f):
-    @wraps(f)
-    def wrapper(*v, **kv):
-        try:
-            return f(*v, **kv)
-        except Exception as e:
-            print(e)
-    return wrapper
-
-
 def json_mimetype(f):
     @wraps(f)
     def wrapper(*v, **kv):
@@ -26,6 +16,7 @@ def json_mimetype(f):
             return r
         return r
     return wrapper
+
 
 def logged(f):
     @wraps(f)
@@ -42,6 +33,7 @@ def logged_user():
         return models.User.query.filter_by(id=session['id']).first()
     return None
 
+
 @app.route('/logout', methods=['POST'])
 @json_mimetype
 def logout():
@@ -51,7 +43,6 @@ def logout():
 
 
 @app.route('/contacts', methods=['POST'])
-@exception_handler
 @logged
 def contacts_post():
     data = request.json
@@ -68,7 +59,6 @@ def contacts_post():
 
 
 @app.route('/contacts', methods=['GET'])
-@exception_handler
 @logged
 def contacts_get():
     cs = models.Contact.query.filter_by(user_id=session['id'])
@@ -80,22 +70,16 @@ def contacts_get():
 
 @app.route('/register', methods=['POST'])
 @json_mimetype
-@exception_handler
 def register():
-    if request.method == 'POST':
-        try:
-            data = request.json
-            u = models.User(data['email'], data['password'])
-            if len(models.User.query.filter_by(email=data['email']).all()) != 0:
-                r = Response({'status': 'bad', 'uid': 0})
-                return r
-            models.db.session.add(u)
-            models.db.session.commit()
-            r = Response(json.dumps({"status": "ok", "uid": 2}))
-            return r
-        except Exception as e:
-            print(e)
-            return r
+    data = request.json
+    u = models.User(data['email'], data['password'])
+    if len(models.User.query.filter_by(email=data['email']).all()) != 0:
+        r = Response({'status': 'bad', 'uid': 0})
+        return r
+    models.db.session.add(u)
+    models.db.session.commit()
+    r = Response(json.dumps({"status": "ok", "uid": 2}))
+    return r
 
 
 @app.route('/account', methods=['GET'])
@@ -109,7 +93,6 @@ def account():
 
 
 @app.route('/login', methods=['POST', 'GET'])
-@exception_handler
 @json_mimetype
 def login():
     data = request.json
@@ -124,7 +107,6 @@ def login():
 
 
 @app.route('/contacts/<int:pk>', methods=['DELETE'])
-@exception_handler
 @logged
 def delete(pk):
     to_delete = models.Contact.query.filter_by(id=pk, user_id=logged_user().id).first()
