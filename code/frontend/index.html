@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phonebook</title>
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
+    <script src="bower_components/jquery/dist/jquery.js" defer></script>
+    <script src="bower_components/angular/angular.js" defer></script>
+    <script src="bower_components/angular-aria/angular-aria.js" defer></script>
+    <script src="bower_components/angular-animate/angular-animate.js" defer></script>
+    <script src="bower_components/angular-material/angular-material.js" defer></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js" defer></script>
+    <script src="app/Phonebook.js" defer></script>
+    <script src="app/api.js" defer></script>
+    <script src="app/userService.js" defer></script>
+    <script src="app/Contact.js" defer></script>
+    <script src="app/contactsService.js" defer></script>
+    <script src="app/mainCtrl.js" defer></script>
+    <script src="app/topCtrl.js" defer></script>
+    <script src="app/registerCtrl.js" defer></script>
+    <script src="app/loginCtrl.js" defer></script>
+    <script src="app/contactsCtrl.js" defer></script>
+    <style>
+        body, ui-view {
+            background-color: #EEEEEE;
+        }
+        pre {
+            font-family: inherit;
+        }
+        textarea {
+            overflow-y: scroll;
+        }
+        md-card, .md-whiteframe-z1 {
+            background-color: #ffffff;
+        }
+        md-toolbar a+a, md-toolbar h2+a {
+            margin-left: 0.5em;
+        }
+        section.contacts, md-content.register, md-content.login {
+            max-width: 700px;
+            width:100%;
+            margin: 5px auto;
+        }
+        md-content.register > div, md-content.login > div {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body ng-app="Phonebook">
+    <md-toolbar ng-controller="Phonebook.topCtrl">
+        <div ng-if="!userLogged" class="md-toolbar-tools">
+            <a ui-sref="register()">Register</a>
+            <a ui-sref="login()">Log in</a>
+        </div>
+        <div ng-if="userLogged" class="md-toolbar-tools">
+            <h2>{{ userLogged }}</h2>
+            <a ng-click="logout()" href="#">Log out</a>
+        </div>
+    </md-toolbar>
+    <ui-view layout="column"></ui-view>
+</body>
+</html>
