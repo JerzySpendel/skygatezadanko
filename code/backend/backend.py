@@ -19,6 +19,7 @@ def json_mimetype(f):
 
 
 def logged(f):
+
     @wraps(f)
     @json_mimetype
     def wrapper(*v, **kv):
@@ -109,7 +110,8 @@ def login():
 @app.route('/contacts/<int:pk>', methods=['DELETE'])
 @logged
 def delete(pk):
-    to_delete = models.Contact.query.filter_by(id=pk, user_id=logged_user().id).first()
+    u = logged_user()
+    to_delete = models.Contact.query.filter_by(id=pk, user_id=u.id).first()
     models.db.session.delete(to_delete)
     models.db.session.commit()
     return Response()
