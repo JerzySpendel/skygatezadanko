@@ -8,4 +8,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "private_network", ip: "192.168.33.11"
   config.ssh.forward_agent = true
   config.vm.provision :shell, path: "provision/prepare_machine.sh", privileged: false
+  config.vm.provision :shell, path: "provision/prepare_backend.sh", run: "always", privileged: false
 end
