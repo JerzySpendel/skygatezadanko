@@ -47,7 +47,7 @@ def logout():
 @logged
 def contacts_post():
     data = request.json
-    u = models.User.query.filter_by(email='jspendel@gmail.com').first()
+    u = logged_user()
     m = models.Contact(data['name'], data['telephone'],
                        data['address'], data['comment'])
     m.owner = u
@@ -64,7 +64,6 @@ def contacts_post():
 def contacts_get():
     cs = models.Contact.query.filter_by(user_id=session['id'])
     d = [c.to_dict() for c in cs]
-    print(d)
     r = Response(json.dumps({'contacts': d}))
     return r
 
